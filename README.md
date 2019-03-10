@@ -1,10 +1,11 @@
-pushoverglances/notify.py is a custom component for the Home Assistant home automation platform.
-Learn more about the [Home-assistant platform](https://home-assistant.io/)
+## Overview
+**pushoverglances/notify.py** is a custom component for the Home Assistant home automation platform.
 
-This component was original created by Amir974 for and can be found [https://github.com/Amir974/home-assistant-custom-components] (https://github.com/Amir974/home-assistant-custom-components)
-
-# Overview
 This component allows you to send information from Home Assistant to complications on an Apple Watch.  It uses the ["Glances"](https://pushover.net/api/glances) feature of [Pushover](https://pushover.net).
+
+This component was original created by Amir974 for and the original source can be found here: https://github.com/Amir974/home-assistant-custom-components
+
+Learn more about [Home-assistant](https://home-assistant.io/)
 
 ## Pushover - Glances
 While Home-Assistant already has a [notification platform implementation for pushover](https://home-assistant.io/components/notify.pushover/), at present it's only for sending push notifications...
@@ -13,7 +14,7 @@ This implementation of the ["Glances"](https://pushover.net/api/glances) allows 
 
 * **Notify** - (``pushoverglances``) will let you connect the service and set it up so you can send *count numeric messages* to the little info placeholder and  *short text messages* to the the larger placeholder
 
-**You will want to get [The Pushover App](https://itunes.apple.com/us/app/pushover-notifications/id506088175?mt=8&at=1010l3fx) from the Apple app store if you haven't already...**
+**You will need to get [The Pushover App](https://itunes.apple.com/us/app/pushover-notifications/id506088175?mt=8&at=1010l3fx) from the Apple app store if you haven't already...**
 
 ![Apple-Watch-Example](/images/apple-watch-with-pushover-glances.PNG?raw=true "Apple Watch with Home-Assistant Data via Pushover Glances")
 
