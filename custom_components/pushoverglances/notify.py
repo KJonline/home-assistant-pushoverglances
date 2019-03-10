@@ -36,11 +36,13 @@ import datetime
 
 from homeassistant.components.notify import (
     ATTR_TITLE, ATTR_TARGET, ATTR_DATA,PLATFORM_SCHEMA, BaseNotificationService)
-from homeassistant.const import CONF_API_KEY
+from homeassistant.const import (CONF_API_KEY, CONF_NAME)
 import homeassistant.helpers.config_validation as cv
 
 REQUIREMENTS = ['python-pushover==0.2']
 _LOGGER = logging.getLogger(__name__)
+
+DEFAULT_NAME = 'pushoverglances'
 
 CONF_USER_KEY = 'user_key'
 
@@ -54,6 +56,7 @@ ATTR_SUBTEXT = 'subtext'
 PLATFORM_SCHEMA = cv.PLATFORM_SCHEMA.extend({
     vol.Required(CONF_USER_KEY): cv.string,
     vol.Required(CONF_API_KEY): cv.string,
+    vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
 })
 
 def get_service(hass, config,discovery_info):
