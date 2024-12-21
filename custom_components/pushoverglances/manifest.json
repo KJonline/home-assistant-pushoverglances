@@ -7,4 +7,5 @@
     "iot_class": "cloud_push",
     "loggers": ["pushover_complete"],
     "requirements": ["pushover_complete==1.1.1"]
+    "version": 1
   }
