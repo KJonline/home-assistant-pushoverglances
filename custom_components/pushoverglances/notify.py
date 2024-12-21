@@ -28,102 +28,106 @@ glances2:
 
 
 """
+
 import logging
 import http.client, urllib
-import voluptuous as vol
 import time
 import datetime
 
-from homeassistant.components.notify import (
-    ATTR_TITLE, ATTR_TARGET, ATTR_DATA,PLATFORM_SCHEMA, BaseNotificationService)
-from homeassistant.const import (CONF_API_KEY, CONF_NAME)
-import homeassistant.helpers.config_validation as cv
+from pushover_complete import PushoverAPI, BadAPIRequestError
 
-REQUIREMENTS = ['python-pushover==0.2']
+from homeassistant.components.notify import (
+    ATTR_DATA,
+    ATTR_TITLE,
+    BaseNotificationService,
+)
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+
+from .const import (
+    ATTR_COUNT,
+    ATTR_PERCENT,
+    ATTR_SUBTEXT,
+    CONF_USER_KEY,
+    DOMAIN,
+)
+
 _LOGGER = logging.getLogger(__name__)
 
-DEFAULT_NAME = 'pushoverglances'
 
-CONF_USER_KEY = 'user_key'
-
-ATTR_MESSAGE = 'message'
-ATTR_TITLE = 'title'
-
-ATTR_COUNT = 'count'
-ATTR_PERCENT = 'percent'
-ATTR_SUBTEXT = 'subtext'
-
-PLATFORM_SCHEMA = cv.PLATFORM_SCHEMA.extend({
-    vol.Required(CONF_USER_KEY): cv.string,
-    vol.Required(CONF_API_KEY): cv.string,
-    vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-})
-
-def get_service(hass, config,discovery_info):
-    """Get the Pushover notification service (Verify the keys)"""
-    from pushover import InitError
-    #validation part
-    try:
-        return PushoverGlanceService(config[CONF_USER_KEY],
-                                           config[CONF_API_KEY])
-    except InitError:
-        _LOGGER.error('Wrong API key supplied pushover glances. Get it at https://pushover.net')
+async def async_get_service(
+    hass: HomeAssistant,
+    config: ConfigType,
+    discovery_info: DiscoveryInfoType | None = None,
+) -> PushoverNotificationService | None:
+    """Get the Pushover notification service."""
+    if discovery_info is None:
         return None
+    pushover_api: PushoverAPI = hass.data[DOMAIN][discovery_info["entry_id"]]
+    return PushoverNotificationService(
+        hass, pushover_api, discovery_info[CONF_USER_KEY]
+    )
 
 
-class PushoverGlanceService(BaseNotificationService):
-    """Implement the notification service for Pushover - Glances."""
+class PushoverNotificationService(BaseNotificationService):
+    """Implement the notification service for Pushover."""
 
-    def __init__(self, user_key, api_token):
+    def __init__(
+        self, hass: HomeAssistant, pushover: PushoverAPI, user_key: str, api_token: str
+    ) -> None:
         """Initialize the service."""
-        from pushover import Client
+        self._hass = hass
         self._user_key = user_key
         self._api_token = api_token
-        self.pushover = Client(
-            self._user_key, api_token=self._api_token)
+        self.pushover = pushover
 
-    def send_message(self, message='', **kwargs):
+    def send_message(self, message="", **kwargs):
         """Send a message to a user."""
-        from pushover import RequestError
+
         ts = time.time()
-        rTimefull = datetime.datetime.fromtimestamp(ts).strftime('%H:%M')
-		
+        rTimefull = datetime.datetime.fromtimestamp(ts).strftime("%H:%M")
+
         data = kwargs.get(ATTR_DATA)
         myTitle = kwargs.get(ATTR_TITLE, rTimefull)
         # Set connection for API
         conn = http.client.HTTPSConnection("api.pushover.net:443")
-		
-        urlbuilder = { "token": self._api_token}
-        urlbuilder ["user"] = self._user_key
-		
-        if myTitle:
-          urlbuilder ["title"] = myTitle
 
-        if message != "False":
-          urlbuilder ["text"] = str(message)
-          _LOGGER.debug("message = %s", str(message))
-		  
+        urlbuilder = {"token": self._api_token}
+        urlbuilder["user"] = self._user_key
+
+        if myTitle:
+            urlbuilder["title"] = myTitle
+
+        if message != "":
+            urlbuilder["text"] = str(message)
+            _LOGGER.debug("message = %s", str(message))
+
         if data is not None and ATTR_COUNT in data:
-          myCount = data.get(ATTR_COUNT, None)
-          _LOGGER.debug("myCount = %s", str(myCount))
-          urlbuilder["count"] = str(myCount).strip("''")
+            myCount = data.get(ATTR_COUNT, None)
+            _LOGGER.debug("myCount = %s", str(myCount))
+            urlbuilder["count"] = str(myCount).strip("''")
 
         if data is not None and ATTR_PERCENT in data:
-          myPercent = data.get(ATTR_PERCENT, None)
-          _LOGGER.debug("myPercent = %s", str(myPercent))
-          urlbuilder["percent"] = str(myPercent).strip("''")
-		  
+            myPercent = data.get(ATTR_PERCENT, None)
+            _LOGGER.debug("myPercent = %s", str(myPercent))
+            urlbuilder["percent"] = str(myPercent).strip("''")
+
         if data is not None and ATTR_SUBTEXT in data:
-          mySubText = data.get(ATTR_SUBTEXT, None)
-          _LOGGER.debug("mySubText = %s", str(mySubText))
-          urlbuilder["subtext"] = str(mySubText).strip("''")
-          
+            mySubText = data.get(ATTR_SUBTEXT, None)
+            _LOGGER.debug("mySubText = %s", str(mySubText))
+            urlbuilder["subtext"] = str(mySubText).strip("''")
+
         _LOGGER.debug("Building = %s", str(urlbuilder))
-        conn.request("POST", "/1/glances.json", urllib.parse.urlencode(urlbuilder), { "Content-type": "application/x-www-form-urlencoded" })
+        conn.request(
+            "POST",
+            "/1/glances.json",
+            urllib.parse.urlencode(urlbuilder),
+            {"Content-type": "application/x-www-form-urlencoded"},
+        )
         try:
-           _LOGGER.debug("got it!")
-           conn.getresponse()
+            _LOGGER.debug("got it!")
+            conn.getresponse()
         except ValueError as val_err:
-           _LOGGER.error(str(val_err))
-        except RequestError:
-           _LOGGER.exception('Could not send pushover glances notification')
+            _LOGGER.error(str(val_err))
+        except BadAPIRequestError:
+            _LOGGER.exception("Could not send pushover glances notification")
