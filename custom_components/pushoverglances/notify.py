@@ -128,7 +128,8 @@ class PushoverGlanceService(BaseNotificationService):
         )
         try:
             _LOGGER.debug("got it!")
-            conn.getresponse()
+            reponse = conn.getresponse()
+            _LOGGER.debug("response = %s", str(reponse.read()))
         except ValueError as val_err:
             _LOGGER.error(str(val_err))
         except BadAPIRequestError:
