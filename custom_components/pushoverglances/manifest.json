@@ -3,7 +3,7 @@
     "name": "Pushover Glances",
     "codeowners": ["@kjonline"],
     "config_flow": true,
-    "documentation": "https://www.home-assistant.io/integrations/pushover",
+    "documentation": "https://github.com/KJonline/home-assistant-pushoverglances",
     "iot_class": "cloud_push",
     "loggers": ["pushover_complete"],
     "requirements": ["pushover_complete==1.1.1"],
