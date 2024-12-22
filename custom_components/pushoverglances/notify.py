@@ -1,57 +1,22 @@
 """
-Pushover platform for notify via glances - small notifications
-for apple iWatch for example!
-
-#
-glances1:
-  sequence:
-    - service: notify.pushoverglances
-      data_template:
-        message: "Rst msg"
-        title: "Rst ttl"
-        data:
-          count: "100"
-          precent: "100"
-          subtext: "Rst subtxt"
-#
-glances2:
-  sequence:
-    - service: notify.pushoverglances
-      data_template:
-        message: "{{states('sensor.amir_work_to_home')}}msg"
-        title: "{{states('sensor.amir_work_to_home')}} ttl"
-        data:
-          count: "{{states('sensor.amir_work_to_home')}}"
-          precent: "{{(states('sensor.amir_work_to_home' ) | int) * 2}}"
-          subtext: "{{((states('sensor.amir_work_to_home' ) | int) * 3)}}"
-#
-
-
+Pushover platform for notify via glances to apple watch.
 """
 
+import http.client
 import logging
-import http.client, urllib
 import time
-import datetime
+import urllib
+from datetime import datetime
 
-from pushover_complete import PushoverAPI, BadAPIRequestError
-
-from homeassistant.components.notify import (
-    ATTR_DATA,
-    ATTR_TITLE,
-    BaseNotificationService,
-)
+from homeassistant.components.notify import (ATTR_DATA, ATTR_TITLE,
+                                             BaseNotificationService)
 from homeassistant.const import CONF_API_KEY
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+from pushover_complete import BadAPIRequestError, PushoverAPI
 
-from .const import (
-    ATTR_COUNT,
-    ATTR_PERCENT,
-    ATTR_SUBTEXT,
-    CONF_USER_KEY,
-    DOMAIN,
-)
+from .const import (ATTR_COUNT, ATTR_PERCENT, ATTR_SUBTEXT, CONF_USER_KEY,
+                    DOMAIN)
 
 _LOGGER = logging.getLogger(__name__)
 

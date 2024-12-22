@@ -1,6 +1,7 @@
 """Constants for Push Over Glances."""
 
 from typing import Final
+
 from homeassistant.const import Platform
 
 DOMAIN = "pushoverglances"

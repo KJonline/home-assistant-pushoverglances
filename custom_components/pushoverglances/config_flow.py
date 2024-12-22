@@ -5,12 +5,12 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from pushover_complete import BadAPIRequestError, PushoverAPI
 import voluptuous as vol
-
-from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import (ConfigEntry, ConfigFlow,
+                                          ConfigFlowResult)
 from homeassistant.const import CONF_API_KEY, CONF_NAME
 from homeassistant.core import HomeAssistant
+from pushover_complete import BadAPIRequestError, PushoverAPI
 
 from .const import CONF_USER_KEY, DEFAULT_NAME, DOMAIN
 
