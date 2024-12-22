@@ -17,8 +17,8 @@ from .const import CONF_USER_KEY, DEFAULT_NAME, DOMAIN
 USER_SCHEMA = vol.Schema(
     {
         vol.Optional(CONF_NAME, default=DEFAULT_NAME): str,
-        vol.Required(CONF_API_KEY): str,
         vol.Required(CONF_USER_KEY): str,
+        vol.Required(CONF_API_KEY): str
     }
 )
 

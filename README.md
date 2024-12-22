@@ -19,9 +19,61 @@ This implementation of the ["Glances"](https://pushover.net/api/glances) allows 
 ![Apple-Watch-Example](/images/apple-watch-with-pushover-glances.PNG?raw=true "Apple Watch with Home-Assistant Data via Pushover Glances")
 
 # Installation Instructions
-* Create a "custom_components" folder in the same directory where the configuration.yaml file is located, and sub folders for the relevant components types similar to the structure [here](https://github.com/riwifall/home-assistant-custom-components/tree/master/custom_components) just for the components you are going to use...
-* Next you should take care of configuration and settings for the components - take a look at the [Yaml-Config-Example](https://github.com/Amir974/home-assistant-custom-components/tree/master/Yaml-Config-Example) folder and pay attention to the comments - it's not a straight forward copy-paste
 
+Click the below to add the repository to HACS via a custom repository.
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=KJonline&repository=home-assistant-pushoverglances&category=Integration)
+
+
+Once this is compelte you can click the below button to install the component.
+
+
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=pushoverglances)
+
+
+## How to send update with notify service
+```yaml
+action: notify.pushover_glances
+data:
+  title: Lights
+  data:
+    ## Not all of these are required only 1 will be shown, we are just them all for completeness
+    count: 6
+    percent: 100
+    subtext: 6 Lights currently on
+  message: Lights
+
+```
+
+Below is a screenshot showing the fields available and what they mean as per the [Pushover](https://pushover.net/api/glances) documentation
+
+![Field-Definitions](/images/Pushover-Glances-Field-Definitions.png?raw=true "Field Definitions for Pushover Glances")
+
+
+## Automation Example
+```yaml
+description: ""
+mode: single
+triggers:
+  - trigger: state
+    entity_id:
+      - light.light1
+      - light.light2
+      - light.light3
+    to: "on"
+conditions: []
+actions:
+  - action: notify.pushover_glances
+    metadata: {}
+    data:
+      message: Lights update
+      title: Lights
+      data:
+        count: 3 
+        percent: 100
+        subtext: 3 Lights currently on
+
+```
 
 # More information
 * I invite you to read about this component and more [on Amir974's blog](http://www.virtualida.com/2016/11/status-of-my-smart-home/)

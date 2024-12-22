@@ -13,8 +13,9 @@
         "user": {
           "data": {
             "name": "[%key:common::config_flow::data::name%]",
-            "api_key": "[%key:common::config_flow::data::api_key%]",
-            "user_key": "User key"
+            "user_key": "User key",
+            "api_key": "[%key:common::config_flow::data::api_key%]"
+            
           }
         },
         "reauth_confirm": {
