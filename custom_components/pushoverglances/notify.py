@@ -60,18 +60,18 @@ async def async_get_service(
     hass: HomeAssistant,
     config: ConfigType,
     discovery_info: DiscoveryInfoType | None = None,
-) -> PushoverNotificationService | None:
+):
     """Get the Pushover notification service."""
     if discovery_info is None:
         return None
     pushover_api: PushoverAPI = hass.data[DOMAIN][discovery_info["entry_id"]]
     print(discovery_info)
-    return PushoverNotificationService(
+    return PushoverGlanceService(
         hass, pushover_api, discovery_info[CONF_USER_KEY], discovery_info[CONF_API_KEY]
     )
 
 
-class PushoverNotificationService(BaseNotificationService):
+class PushoverGlanceService(BaseNotificationService):
     """Implement the notification service for Pushover."""
 
     def __init__(
