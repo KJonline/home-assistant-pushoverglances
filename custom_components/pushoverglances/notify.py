@@ -41,6 +41,7 @@ from homeassistant.components.notify import (
     ATTR_TITLE,
     BaseNotificationService,
 )
+from homeassistant.const import CONF_API_KEY
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
@@ -64,8 +65,9 @@ async def async_get_service(
     if discovery_info is None:
         return None
     pushover_api: PushoverAPI = hass.data[DOMAIN][discovery_info["entry_id"]]
+    print(discovery_info)
     return PushoverNotificationService(
-        hass, pushover_api, discovery_info[CONF_USER_KEY]
+        hass, pushover_api, discovery_info[CONF_USER_KEY], discovery_info[CONF_API_KEY]
     )
 
 
