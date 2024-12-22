@@ -127,9 +127,12 @@ class PushoverGlanceService(BaseNotificationService):
             {"Content-type": "application/x-www-form-urlencoded"},
         )
         try:
-            _LOGGER.debug("got it!")
             reponse = conn.getresponse()
             _LOGGER.debug("response = %s", str(reponse.read()))
+            if reponse.status != 200:
+                _LOGGER.error("Error sending pushover glances notification")
+                raise BadAPIRequestError
+            _LOGGER.debug("got it!")
         except ValueError as val_err:
             _LOGGER.error(str(val_err))
         except BadAPIRequestError:
