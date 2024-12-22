@@ -1,0 +1,28 @@
+{
+    "config": {
+        "flow_title": "Pushover Glances Setup",
+        "step": {
+            "user": {
+                "title": "Credentials Setup",
+                "description": "Enter your Pushover credentials.",
+                "data": {
+                    "name": "Name",
+                    "api_key": "API Key",
+                    "user_key": "User Key"
+                }
+            },
+            "reauth_confirm": {
+                "title": "Re-confirm Credentials",
+                "description": "Enter your Pushover API key to re-confirm.",
+                "data": {
+                    "api_key": "API Key"
+                }
+            }
+        },
+        "error": {
+            "invalid_api_key": "The provided API key is invalid.",
+            "invalid_user_key": "The provided User key is invalid.",
+            "cannot_connect": "The connection to Pushover failed."
+        }
+    }
+}

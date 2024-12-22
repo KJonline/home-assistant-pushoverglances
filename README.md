@@ -20,12 +20,18 @@ This implementation of the ["Glances"](https://pushover.net/api/glances) allows 
 
 # Installation Instructions
 
-Click the below to add the repository to HACS via a custom repository.
+1) Click the below to add the repository to HACS via a custom repository.
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=KJonline&repository=home-assistant-pushoverglances&category=Integration)
 
 
-Once this is compelte you can click the below button to install the component.
+2) Following the on screen instructions
+
+3) Click the option to download the component from the HACS store.
+
+4) After this is done a restart of Home Assistant is required.
+
+5) Once this is compelte you can click the below button to install the component.
 
 
 [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=pushoverglances)
